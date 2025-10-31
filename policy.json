@@ -1,0 +1,13 @@
+{
+  "CN=admin": {
+    "READ": ["*"],
+    "WRITE": ["*"],
+    "LIST":  ["*"],
+    "MKDIR": ["*"],
+    "DELETE": ["*"]
+  },
+  "CN=guest": {
+    "READ": ["/public/*"],
+    "LIST": ["/public/*"]
+  }
+}
