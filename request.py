@@ -15,6 +15,6 @@ def view_request(user,whitelist,filename): #checks user authority
         print("whitelist failed to load")
     
     if perm == 1:
-        with open(filename,r):
-            for line in file:
-                print line
+        fs_read(filename)
+
+
