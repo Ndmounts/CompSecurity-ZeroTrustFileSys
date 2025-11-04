@@ -2,19 +2,32 @@ include json
 include os 
 
 
-def view_request(user,whitelist,filename): #checks user authority
-    bool perm = 0 #bool for permissions 
-   
-   try:
+
+
+def whitelistCheck(user,filename):
+    try:
         with open("whitelist.json", "r") as whitelist:
             if user in jason.load(whitelist)[filename][read]:
-                perm = 1
+                return 1
             else:
-                print(user + " is not authorized to read " + filename)
+                return 0
     except:
         print("whitelist failed to load")
+        return -1
     
+def view_request(user,filename):
+    perm =  whitelistCheck(user,filename)
+    if perm == 0:
+            print(user + " is not authorized to read " + filename)
     if perm == 1:
         fs_read(filename)
+
+def write_request(user,filename):
+    perm = whitelistCheck(user,filename,data)
+    if perm == 0:
+        print(user + " is not authorized to write to " + filename)
+    if perm == 1:
+        fs_write(filename,data)
+
 
 
