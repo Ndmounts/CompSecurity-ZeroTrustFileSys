@@ -1,0 +1,13 @@
+To Do:
+Certs
+	Cert Verification
+	Cert to user parsing (should be verry easy via openssl as the users name is part of the cert DN)
+Requests
+	write permissions
+	creat permissions
+	cd perissions
+
+Network sim
+	all of it
+	
+	
