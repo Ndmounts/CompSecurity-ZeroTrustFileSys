@@ -48,4 +48,4 @@ def touch_request(user, filename):
     if perm == 0:
         print(user, "is not authorized to creat files in " + files.rsplit('/', 1)[0])
     if perm == 1:
-        #comand not named yet
+        make_file(user, filename)
