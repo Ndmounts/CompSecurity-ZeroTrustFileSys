@@ -36,3 +36,16 @@ def mkdir_request(user,filename):
     if perm == 1:
         fs_mkdir(filename)
 
+def rm_request(user,filename):
+    perm = whirelistCheck(user,filename,"rm")
+    if perm ==  0:
+        print(user + " is not authorized to remove " + filename)
+    if perm == 2: 
+        fs_rm(filename)
+
+def touch_request(user, filename):
+    perm = whitlistCheck(user, filename,"touch"):
+    if perm == 0:
+        print(user, "is not authorized to creat files in " + files.rsplit('/', 1)[0])
+    if perm == 1:
+        #comand not named yet
