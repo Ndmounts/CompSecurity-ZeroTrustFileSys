@@ -1,7 +1,7 @@
-include json
-include os 
+import json
+import os 
 import fs.py
-
+import auth.py
 
 
 def whitelistCheck(user,filename,permissions):
