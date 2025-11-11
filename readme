@@ -9,3 +9,23 @@ Requests
 
 Network sim
 	all of it
+
+
+
+Complications and Learnings along the way:
+	In trying to come up with solutions to having both certificate authentication and server side file encryption
+	we came to the conclusion that handing off the decryption key to the user would pose a security risk if
+	the data was in some way stolen from the filesystem. We decided one solution to this would be
+	to provide half of the key to the user upon encryption using XOR so that on tha
+
+	Learning how to use the dns of certs for verification
+
+
+
+Presentation:
+	Demonstrate user addition to the filesystem. With certification key pairs.
+
+	Demonstrate file creation, user reception of portion of encrypted file's hash.
+
+	Demonstrate file read/write capabilities
+
