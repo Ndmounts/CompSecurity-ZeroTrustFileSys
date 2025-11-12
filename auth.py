@@ -5,7 +5,8 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.x509.oid import NameOID
 
 
-def user_from_cert(cert): # also verifies cert
+def user_from_cert(): # also verifies cert
+    leaf_cert_path = certs/curent.csr
     try:
         with open(leaf_cert_path, "rb") as f:
             leaf_cert_data = f.read()
