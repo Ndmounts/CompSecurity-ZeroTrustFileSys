@@ -3,6 +3,9 @@
 		"read":{
 		},
 		"write":{
+		},
+		"mod_perm":{
+			
 		}		
 	}
 }

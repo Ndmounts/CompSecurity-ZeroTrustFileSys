@@ -7,7 +7,7 @@ import auth.py
 def whitelistCheck(user,filename,permissions):
     try:
         with open("whitelist.json", "r") as whitelist:
-            if user in jason.load(whitelist)[filename][permissions]:
+            if user in json.load(whitelist)[filename][permissions]:
                 return 1
             else:
                 return 0
@@ -49,3 +49,30 @@ def touch_request(user, filename):
         print(user, "is not authorized to creat files in " + files.rsplit('/', 1)[0])
     if perm == 1:
         make_file(user, filename)
+        add_perm(user,filename,user,"mod_perm")
+        add_perm(user,filename,user,"write")
+        add_perm(user,filename,user,"read")
+
+
+def add_perm(user, filename, data, perm):
+    with open(whitelist.json, "r") as f:
+        whitelist = f.load
+
+    if filename in whitelist:
+        if whitelistCheck(user,filename,"mod_perm"):
+            whitelist[filename].setdefault(perm, [])
+            if user not in whitelist[filename][perm]:
+                whitelist[filename][perm].append(user)
+            with open(whitelist.json,w) f:
+                json.dump(whitelist, f, indent=4)
+        else:
+             print(user + " dose not have permission to modify " + filename "'s permissions")
+    else:
+        whitelist[filename] = {
+            "read": {},
+            "write": {},
+            "mod_perm": {}
+        }
+        whitelist[filename][perm].append(user)
+    with open("whitelist.json", "w") as f:
+        json.dump(whitelist, f, indent=4)
