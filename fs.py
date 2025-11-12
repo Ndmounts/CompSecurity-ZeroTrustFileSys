@@ -27,33 +27,71 @@ def fs_list(path: str):
         raise FileNotFoundError(f"{path} is not a directory")
     return os.listdir(os_path)
 
-def fs_write(path: str, data: str, k_user_hex: str | None = None) -> str:
+def create_file(path: str, data: str) -> str:
+    """
+    Create a new encrypted file.
+    - Registers a new file_id on the server
+    - Generates a new user key (K_user)
+    - Encrypts data and uploads ciphertext
+    - Writes .meta with file_id
+    Returns the user's key (hex string)
+    """
     os_path = _to_os_path(path)
     parent = os.path.dirname(os_path)
     os.makedirs(parent, exist_ok=True)
 
+    # Register new file on the server
     file_id, k_server_hex = server_register_file()
 
-    if k_user_hex is None:
-        file_id, new_k_user_hex, enc, nonce = client_encrypt_file(
-            data.encode("utf-8"), k_server_hex
-        )
-    else:
-        file_id, enc, nonce = client_encrypt_file_with_user_key(
-            data.encode("utf-8"), k_server_hex, k_user_hex
-        )
-        new_k_user_hex = k_user_hex  # reuse
+    # Encrypt with a new user key
+    file_id, k_user_hex, enc, nonce = client_encrypt_file(
+        data.encode("utf-8"), k_server_hex
+    )
 
+    # Upload encrypted file to the server
     server_store_encrypted(file_id, enc, nonce)
 
+    # Store metadata locally
     with open(os_path + ".meta", "w") as meta:
         meta.write(file_id)
+
+    # Save encrypted file locally
+    with open(os_path, "wb") as f:
+        f.write(enc)
+
+    return k_user_hex
+
+def fs_write(path: str, data: str, k_user_hex: str):
+    """
+    Write to an existing encrypted file.
+    - Reads .meta to get the file_id
+    - Uses the provided user key to encrypt new content
+    - Updates ciphertext on both local and server sides
+    """
+    os_path = _to_os_path(path)
+    meta_path = os_path + ".meta"
+
+    if not os.path.exists(meta_path):
+        raise FileNotFoundError("No existing file metadata found. Use create_file().")
+
+    # Retrieve existing server info
+    with open(meta_path, "r") as meta:
+        file_id = meta.read().strip()
+
+    k_server_hex, _, _ = server_retrieve(file_id)
+
+    # Encrypt new content
+    file_id, enc, nonce = client_encrypt_file_with_user_key(
+        data.encode("utf-8"), k_server_hex, k_user_hex
+    )
+
+    # Upload to server and update local storage
+    server_store_encrypted(file_id, enc, nonce)
 
     with open(os_path, "wb") as f:
         f.write(enc)
 
-    return new_k_user_hex
-
+    print(f"File '{path}' updated successfully.")
 
 def fs_read(path: str, k_user_hex: str) -> str:
     """

@@ -1,19 +1,26 @@
 import sys
-from fs import fs_write, fs_read, fs_list, fs_mkdir
-from config import FS_ROOT
 import os
+from fs import create_file, fs_write, fs_read, fs_list, fs_mkdir
+from config import FS_ROOT
 
 HELP = """Usage:
-  python demo.py write <path> <text>
-  python demo.py read  <path> <k_user_hex>
-  python demo.py ls    <path>
-  python demo.py mkdir <path>
+  python demo.py create <path> <text>
+  python demo.py write  <path> <k_user_hex> <text>
+  python demo.py read   <path> <k_user_hex>
+  python demo.py ls     <path>
+  python demo.py mkdir  <path>
 
 Examples:
-  python demo.py write /docs/hello.txt "hello zero trust"
-  # (copy the printed key)
+  # create a brand new encrypted file (server entry + new user key)
+  python demo.py create /docs/hello.txt "hello zero trust"
+
+  # copy the printed key, then later update the same file:
+  python demo.py write /docs/hello.txt <that-key> "new contents"
+
+  # read it back
   python demo.py read /docs/hello.txt <that-key>
 """
+
 
 def main():
     if len(sys.argv) < 2:
@@ -22,16 +29,27 @@ def main():
 
     cmd = sys.argv[1]
 
-    if cmd == "write":
+    if cmd == "create":
         if len(sys.argv) < 4:
             print("need path and text")
             return
         path = sys.argv[2]
         text = " ".join(sys.argv[3:])
-        k_user_hex = fs_write(path, text)
-        print("File written.")
+        k_user_hex = create_file(path, text)
+        print("File created.")
         print("Your user key (SAVE THIS):")
         print(k_user_hex)
+
+    elif cmd == "write":
+        # write to an existing encrypted file
+        if len(sys.argv) < 5:
+            print("need path, k_user_hex, and text")
+            return
+        path = sys.argv[2]
+        k_user_hex = sys.argv[3]
+        text = " ".join(sys.argv[4:])
+        fs_write(path, text, k_user_hex)
+        print("File updated.")
 
     elif cmd == "read":
         if len(sys.argv) != 4:
@@ -65,7 +83,7 @@ def main():
 
 
 if __name__ == "__main__":
-    # just sanity: show where FS_ROOT is
+    # make sure FS_ROOT exists
     if not os.path.exists(FS_ROOT):
         os.makedirs(FS_ROOT, exist_ok=True)
     main()

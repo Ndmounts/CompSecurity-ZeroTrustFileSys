@@ -30,10 +30,10 @@ def write_request(user,filename,data):
         fs_write(filename,data)
 
 def mkdir_request(user,filename):
-    perm = whitelistCheck(user,filename,"mkdir")
-    if perm == 0:
-        print(user + " is not authorized to write to " + filename)
-    if perm == 1:
+    # perm = whitelistCheck(user,filename,"mkdir")
+    # if perm == 0:
+    #     print(user + " is not authorized to write to " + filename)
+    # if perm == 1:
         fs_mkdir(filename)
 
 def rm_request(user,filename):
