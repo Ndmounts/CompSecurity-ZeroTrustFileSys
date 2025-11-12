@@ -1,8 +1,4 @@
-FS_ROOT = "./fsroot"   # host-backed directory
-HOST = "0.0.0.0"
-PORT = 8443
+from pathlib import Path
 
-# TLS material
-SERVER_CERT = "./certs/server.crt"
-SERVER_KEY = "./certs/server.key"
-CA_CERT = "./certs/ca.crt" 
+FS_ROOT = Path(".fsroot")
+FS_ROOT.mkdir(exist_ok=True)
