@@ -1,6 +1,7 @@
 import sys
 import os
-from fs import create_file, fs_write, fs_read, fs_list, fs_mkdir
+import request
+from filesystem import create_file, fs_write, fs_read, fs_list, fs_mkdir
 from config import FS_ROOT
 
 HELP = """Usage:
@@ -35,7 +36,7 @@ def main():
             return
         path = sys.argv[2]
         text = " ".join(sys.argv[3:])
-        k_user_hex = touch_request(path, text)
+        k_user_hex = create_file(path, text)
         print("File created.")
         print("Your user key (SAVE THIS):")
         print(k_user_hex)
@@ -48,7 +49,7 @@ def main():
         path = sys.argv[2]
         k_user_hex = sys.argv[3]
         text = " ".join(sys.argv[4:])
-        write_request(path, text, k_user_hex)
+        fs_write(path, text, k_user_hex)
         print("File updated.")
 
     elif cmd == "read":
@@ -57,7 +58,7 @@ def main():
             return
         path = sys.argv[2]
         k_user_hex = sys.argv[3]
-        plaintext = view_request(path, k_user_hex)
+        plaintext = fs_read(path, k_user_hex)
         print("Decrypted contents:")
         print(plaintext)
 
@@ -75,7 +76,7 @@ def main():
             print("need path to create")
             return
         path = sys.argv[2]
-        mkdir_request(path)
+        fs_mkdir(path)
         print("directory created")
 
     else:
