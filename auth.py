@@ -7,6 +7,7 @@ from cryptography.x509.oid import NameOID
 
 def user_from_cert(): # also verifies cert
     leaf_cert_path = "certs/curent.csr"
+    root_ca_path = "certs/curent_root.csr"
     try:
         with open(leaf_cert_path, "rb") as f:
             leaf_cert_data = f.read()
@@ -23,10 +24,15 @@ def user_from_cert(): # also verifies cert
         verifier.verify(leaf_cert, [])
         return(leaf_cert_data.cn_attributes[0].value)
 
-    except VerificationError as e:
-        print(f"Certificate verification failed: {e}")
-        return "-1"
+    # except VerificationError as e:
+    #     print(f"Certificate verification failed: {e}")
+    #     return "-1"
 
     except Exception as e:
         print(f"An error occurred: {e}")
         return "-1"
+
+
+
+print(user_from_cert())
+
