@@ -26,7 +26,7 @@ def user_from_cert(): # also verifies cert
             leaf_cert.signature_hash_algorithm,
         )
 
-        return(leaf_cert_data.cn_attributes[0].value)
+        return(leaf_cert.subject.get_attributes_for_oid(NameOID.COMMON_NAME)[0].value)
 
 
     except Exception as e:
@@ -35,6 +35,4 @@ def user_from_cert(): # also verifies cert
         return "-1"
 
 
-
-print(user_from_cert())
 
