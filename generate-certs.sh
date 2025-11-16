@@ -1,4 +1,5 @@
-mkdir -p certs
+
+
 cd certs
 
 # CA key (keep private)
@@ -12,14 +13,16 @@ openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 \
 # server key
 openssl genrsa -out server.key 2048
 
+user_cert_gen "user1"
 
-def _newCert(CN):
+user_cert_gen()
 	# csr
+	local CN="$1"
 	openssl req -new -key server.key \
-	-subj "/C=US/ST=CO/L=Denver/O=ZTFS/OU=Server/CN=${CN}" \ 
-	  -out server.csr
+	-subj "/C=US/ST=CO/L=Denver/O=ZTFS/OU=Server/CN=${CN}" \
+		-out server.csr
 
 
 	# sign with CA
 	openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial \
- 	 -out server.crt -days 825 -sha256
+		-out server.crt -days 825 -sha256
