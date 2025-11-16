@@ -36,7 +36,7 @@ def main():
             return
         path = sys.argv[2]
         text = " ".join(sys.argv[3:])
-        k_user_hex = create_file(path, text)
+        k_user_hex = request.touch_request(path, text)
         print("File created.")
         print("Your user key (SAVE THIS):")
         print(k_user_hex)
@@ -49,7 +49,7 @@ def main():
         path = sys.argv[2]
         k_user_hex = sys.argv[3]
         text = " ".join(sys.argv[4:])
-        fs_write(path, text, k_user_hex)
+        request.write_request(path, text, k_user_hex)
         print("File updated.")
 
     elif cmd == "read":
@@ -58,7 +58,7 @@ def main():
             return
         path = sys.argv[2]
         k_user_hex = sys.argv[3]
-        plaintext = fs_read(path, k_user_hex)
+        plaintext = request.view_request(path, k_user_hex)
         print("Decrypted contents:")
         print(plaintext)
 
@@ -76,7 +76,7 @@ def main():
             print("need path to create")
             return
         path = sys.argv[2]
-        fs_mkdir(path)
+        request.mkdir_request(path)  #curently just routs to just call fs_mkdir, but allows for easy modification
         print("directory created")
 
     else:

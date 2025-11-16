@@ -23,7 +23,7 @@ def view_request(filename):
     if perm == 1:
         return(filesystem.fs_read(filename,enc))
 
-def write_request(filename,data):
+def write_request(filename,data,enc):
     perm = whitelistCheck(filename,"write")
     if perm == 0:
         print("you are not authorized to write to " + filename)
@@ -44,7 +44,7 @@ def rm_request(filename):
     if perm == 1:
         filesystem.fs_delete(filename)
 
-def touch_request(filename):
+def touch_request(filename,data):
     #perm = whitelistCheck(filename,"touch")    #decided against limiting file creation
     # if perm == 0:
     #     print("you are not authorized to creat files")
@@ -55,7 +55,7 @@ def touch_request(filename):
         add_perm(filename,user,"write")
         add_perm(filename,user,"read")
         add_perm(filename,user,"rm")
-        return(filesystem.make_file(filename))
+        return(filesystem.create_file(filename,data))
 
 
 def add_perm(filename, data, perm):
