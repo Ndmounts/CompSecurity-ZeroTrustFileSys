@@ -1,6 +1,6 @@
 import json
 import os 
-import fs
+import filesystem
 import auth
 
 
@@ -21,39 +21,41 @@ def view_request(filename):
     if perm == 0:
             print("you are not authorized to read " + filename)
     if perm == 1:
-        return(fs.fs_read(filename,enc))
+        return(filesystem.fs_read(filename,enc))
 
 def write_request(filename,data):
     perm = whitelistCheck(filename,"write")
     if perm == 0:
         print("you are not authorized to write to " + filename)
     if perm == 1:
-        fs.fs_write(filename,data,enc)
+        filesystem.fs_write(filename,data,enc)
 
 def mkdir_request(filename):
     # perm = whitelistCheck(user,filename,"mkdir")
     # if perm == 0:
     #     print("you are not authorized to write to " + filename)
     # if perm == 1:
-        fs.fs_mkdir(filename)
+        filesystem.fs_mkdir(filename)
 
 def rm_request(filename):
     perm = whitelistCheck(filename,"rm")
     if perm ==  0:
-        print(user + " is not authorized to remove " + filename)
+        print("you are not authorized to remove " + filename)
     if perm == 1:
-        fs.fs_rm(filename)
+        filesystem.fs_delete(filename)
 
 def touch_request(filename):
-    perm = whitelistCheck(filename,"touch")
+    #perm = whitelistCheck(filename,"touch")    #decided against limiting file creation
+    # if perm == 0:
+    #     print("you are not authorized to creat files")
+    perm = 1        #patch so we can roll back without dificulty
     user = auth.user_from_cert()
-    if perm == 0:
-        print("you are not authorized to creat files")
     if perm == 1:
         add_perm(filename,user,"mod_perm")
         add_perm(filename,user,"write")
         add_perm(filename,user,"read")
-        return(fs.make_file(filename))
+        add_perm(filename,user,"rm")
+        return(filesystem.make_file(filename))
 
 
 def add_perm(filename, data, perm):
@@ -73,8 +75,9 @@ def add_perm(filename, data, perm):
         whitelist[filename] = {
             "read": [],
             "write": [],
-            "mod_perm": []
+            "mod_perm": [],
+            "rm" : []
         }
         whitelist[filename][perm].append(data)
-    with open("whitelist.json", "w") as f:
-        json.dump(whitelist, f, indent=4)
+        with open("whitelist.json", "w") as f:
+            json.dump(whitelist, f, indent=4)
