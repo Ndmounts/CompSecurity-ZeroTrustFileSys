@@ -28,4 +28,4 @@ user_cert_gen() {
       -CAcreateserial -out "${CN}.crt" -days 825 -sha256
 }
 
-user_cert_gen "user1"
+user_cert_gen "curent"
