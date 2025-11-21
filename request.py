@@ -16,7 +16,7 @@ def whitelistCheck(filename,permissions):
         print("whitelist failed to load")
         return -1
     
-def view_request(filename):
+def view_request(filename, enc):
     perm =  whitelistCheck(filename,"read")
     if perm == 0:
             print("you are not authorized to read " + filename)
