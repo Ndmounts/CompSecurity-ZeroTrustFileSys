@@ -1,3 +1,5 @@
+To run for testing first run make build which will install missing dependencies and make the initial certs. Once this is done to test any given function run python3 demo_user_sim.py folowed by the function. If it is given no agrguments it will output a list of options.
+
 Libs:
 	os - for filesystem
 	hashlib - for file id
