@@ -63,9 +63,7 @@ def server_retrieve(file_id: str):
         raise ValueError("No record found for that file ID")
     return record["k_server_hex"], record["enc"], record["nonce"]
 
-# ------------------------------------------------------------
 # Client Functions (local encryption/decryption)
-# ------------------------------------------------------------
 def client_encrypt_file_with_user_key(
     plaintext: bytes,
     k_server_hex: str,
